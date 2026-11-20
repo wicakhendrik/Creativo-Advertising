@@ -84,9 +84,9 @@ $result = mysqli_query($conn, "SELECT *
                         <tbody>
                             <?php while( $row = mysqli_fetch_assoc($result)) : ?> 
                             <tr>
-                                <td><?= $row["namaJasa"]; ?></td>
-                                <td><?= $row["keterangan"]; ?></td>
-                                <td>Rp.<?= $row["harga"]; ?></td>
+                                <td><?= e($row["namaJasa"]) ?></td>
+                                <td><?= e($row["keterangan"]) ?></td>
+                                <td>Rp.<?= e($row["harga"]) ?></td>
                             </tr>
                             <?php endwhile; ?> 
                         </tbody>

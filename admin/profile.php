@@ -7,13 +7,14 @@ if( !isset($_SESSION["login"]) ) {
 }
 
 require '../functions.php';
+require __DIR__ . '/auth.php';
 
 $session = $_SESSION["username"];
-$iduser = mysqli_query($conn, "SELECT * FROM users WHERE username = '$session'");
+$iduser = dbq("SELECT * FROM users WHERE username = ?", "s", [$session]);
 while( $baris = mysqli_fetch_assoc($iduser)) {
     $id = $baris["id_user"];
 }
-$user = query("SELECT * FROM users WHERE id_user = $id")[0];
+$user = query("SELECT * FROM users WHERE id_user = ?", "i", [(int)$id])[0];
 
 if( isset($_POST["ubah"]) ) {
 
@@ -181,7 +182,7 @@ if( isset($_POST["ubah"]) ) {
                   <img alt="Image placeholder" src="./assets/img/theme/user.png">
                 </span>
                 <div class="media-body ml-2 d-none d-lg-block">
-                  <span class="mb-0 text-sm  font-weight-bold"><?php echo  $_SESSION["username"]; ?></span>
+                  <span class="mb-0 text-sm  font-weight-bold"><?php echo e($_SESSION["username"]); ?></span>
                 </div>
               </div>
             </a>
@@ -212,7 +213,7 @@ if( isset($_POST["ubah"]) ) {
       <div class="container-fluid d-flex align-items-center">
         <div class="row">
           <div class="col-lg-7 col-md-10">
-            <h1 class="display-2 text-white">Hello <?php echo  $_SESSION["username"]; ?></h1>
+            <h1 class="display-2 text-white">Hello <?php echo e($_SESSION["username"]); ?></h1>
           </div>
         </div>
       </div>
@@ -231,19 +232,20 @@ if( isset($_POST["ubah"]) ) {
             </div>
             <div class="card-body">
               <form method="post">
-                <input type="hidden" name="id" value="<?= $user["id_user"]; ?>">
+<?= csrf_field() ?>
+                <input type="hidden" name="id" value="<?= e($user["id_user"]) ?>">
                 <div class="pl-lg-4">
                   <div class="row">
                     <div class="col-lg-12">
                       <div class="form-group">
                         <label class="form-control-label" for="username" name="username">Username</label>
-                        <input type="text" id="username" class="form-control form-control-alternative" name="username" placeholder="Username" required value="<?= $user["username"]; ?>">
+                        <input type="text" id="username" class="form-control form-control-alternative" name="username" placeholder="Username" required value="<?= e($user["username"]) ?>">
                       </div>
                     </div>
                     <div class="col-lg-12">
                       <div class="form-group">
                         <label class="form-control-label" for="email" name="email">Email</label>
-                        <input type="text" id="email" class="form-control form-control-alternative" name="email" placeholder="E-Mail" required value="<?= $user["email"]; ?>">
+                        <input type="text" id="email" class="form-control form-control-alternative" name="email" placeholder="E-Mail" required value="<?= e($user["email"]) ?>">
                       </div>
                     </div>
                   </div>
@@ -257,9 +259,9 @@ if( isset($_POST["ubah"]) ) {
                           <?php if(mysqli_num_rows($sql) != 0) : ?>
                             <?php while($row = mysqli_fetch_assoc($sql)) : ?>
                                 <?php if($row["id_jk"] == $user["jenisKelamin"]) : ?>
-                                    <option value="<?= $row["id_jk"]; ?>" selected><?= $row["id_jk"]; ?>. <?= $row["ket_jk"]; ?></option>
+                                    <option value="<?= e($row["id_jk"]) ?>" selected><?= e($row["id_jk"]) ?>. <?= e($row["ket_jk"]) ?></option>
                                   <?php else : ?>
-                                    <option value="<?= $row["id_jk"]; ?>"><?= $row["id_jk"]; ?>. <?= $row["ket_jk"]; ?></option>
+                                    <option value="<?= e($row["id_jk"]) ?>"><?= e($row["id_jk"]) ?>. <?= e($row["ket_jk"]) ?></option>
                                 <?php endif; ?>
                             <?php endwhile; ?>
                           <?php endif; ?>
@@ -269,7 +271,7 @@ if( isset($_POST["ubah"]) ) {
                     <div class="col-lg-12">
                       <div class="form-group">
                         <label class="form-control-label" for="notelp" name="notelp">No Telp</label>
-                        <input type="text" id="notelp" class="form-control form-control-alternative" name="notelp" placeholder="081xx" required value="<?= $user["noTelp"]; ?>">
+                        <input type="text" id="notelp" class="form-control form-control-alternative" name="notelp" placeholder="081xx" required value="<?= e($user["noTelp"]) ?>">
                       </div>
                     </div>
                     <div class="col-lg-12">
@@ -281,9 +283,9 @@ if( isset($_POST["ubah"]) ) {
                           <?php if(mysqli_num_rows($sql) != 0) : ?>
                             <?php while($row = mysqli_fetch_assoc($sql)) : ?>
                                 <?php if($row["id_usertype"] == $user["usertype"]) : ?>
-                                    <option value="<?= $row["id_usertype"]; ?>" selected><?= $row["id_usertype"]; ?>. <?= $row["ket_usertype"]; ?></option>
+                                    <option value="<?= e($row["id_usertype"]) ?>" selected><?= e($row["id_usertype"]) ?>. <?= e($row["ket_usertype"]) ?></option>
                                   <?php else : ?>
-                                    <option value="<?= $row["id_usertype"]; ?>"><?= $row["id_usertype"]; ?>. <?= $row["ket_usertype"]; ?></option>
+                                    <option value="<?= e($row["id_usertype"]) ?>"><?= e($row["id_usertype"]) ?>. <?= e($row["ket_usertype"]) ?></option>
                                 <?php endif; ?>
                             <?php endwhile; ?>
                           <?php endif; ?>

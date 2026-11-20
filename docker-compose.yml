@@ -1,0 +1,42 @@
+services:
+  web:
+    build: .
+    container_name: creativo-web
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DB_HOST: db
+      DB_USER: ${DB_USER:-creativo}
+      DB_PASS: ${DB_PASS:-creativo_pass}
+      DB_NAME: ${DB_NAME:-creativo}
+    ports:
+      # Lokal: http://localhost:8080 . Di VPS di belakang reverse proxy, ganti ke "127.0.0.1:8080:80"
+      - "${WEB_BIND:-8080}:80"
+
+  db:
+    image: mysql:8.0
+    container_name: creativo-db
+    restart: unless-stopped
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASS:-root_pass}
+      MYSQL_DATABASE: ${DB_NAME:-creativo}
+      MYSQL_USER: ${DB_USER:-creativo}
+      MYSQL_PASSWORD: ${DB_PASS:-creativo_pass}
+    volumes:
+      - db_data:/var/lib/mysql
+      # File .sql di folder ini dijalankan OTOMATIS hanya saat volume db_data masih kosong (first run)
+      - ./id9352934_creativo.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+    healthcheck:
+      # Pakai TCP (127.0.0.1), BUKAN socket: saat first-run MySQL menjalankan server sementara
+      # (skip-networking) untuk import .sql; ping via socket lulus terlalu dini.
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -p$$MYSQL_ROOT_PASSWORD --silent"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    # Tidak ada "ports" untuk db: MySQL hanya bisa diakses dari container web (aman di VPS)
+
+volumes:
+  db_data:

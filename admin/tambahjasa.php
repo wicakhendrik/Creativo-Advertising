@@ -7,6 +7,7 @@ if( !isset($_SESSION["login"]) ) {
 }
 
 require '../functions.php';
+require __DIR__ . '/auth.php';
 $result = mysqli_query($conn, "SELECT * FROM  jasa");
 
 if( isset($_POST["tambahkan"]) ) {
@@ -175,7 +176,7 @@ if( isset($_POST["tambahkan"]) ) {
                   <img alt="Image placeholder" src="assets/img/theme/user.png">
                 </span>
                 <div class="media-body ml-2 d-none d-lg-block">
-                  <span class="mb-0 text-sm  font-weight-bold"><?php echo  $_SESSION["username"]; ?></span>
+                  <span class="mb-0 text-sm  font-weight-bold"><?php echo e($_SESSION["username"]); ?></span>
                 </div>
               </div>
             </a>
@@ -314,6 +315,7 @@ if( isset($_POST["tambahkan"]) ) {
             </div>
             <div class="card-body">
               <form method="post">
+<?= csrf_field() ?>
                 <div class="pl-lg-4">
                   <div class="row">
                     <div class="col-lg-12">
@@ -330,7 +332,7 @@ if( isset($_POST["tambahkan"]) ) {
                           <?php $sql = mysqli_query($conn, "SELECT * FROM kategoriJasa ORDER BY id_katJasa ASC"); ?>
                           <?php if(mysqli_num_rows($sql) != 0) : ?>
                             <?php while($row = mysqli_fetch_assoc($sql)) : ?>
-                              <option value="<?= $row["id_katJasa"]; ?>"><?= $row["id_katJasa"]; ?>. <?= $row["ket_katJasa"]; ?></option>
+                              <option value="<?= e($row["id_katJasa"]) ?>"><?= e($row["id_katJasa"]) ?>. <?= e($row["ket_katJasa"]) ?></option>
                             <?php endwhile; ?>
                           <?php endif; ?>
                         </select>

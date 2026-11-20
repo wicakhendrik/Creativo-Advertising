@@ -5,7 +5,8 @@ if( !isset($_SESSION["login"]) ) {
   header("Location: ../login.php");
   exit;
 }
-require '../functions.php'
+require '../functions.php';
+require __DIR__ . '/auth.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -152,7 +153,7 @@ require '../functions.php'
                   <img alt="Image placeholder" src="./assets/img/theme/user.png">
                 </span>
                 <div class="media-body ml-2 d-none d-lg-block">
-                  <span class="mb-0 text-sm  font-weight-bold"><?php echo  $_SESSION["username"]; ?></span>
+                  <span class="mb-0 text-sm  font-weight-bold"><?php echo e($_SESSION["username"]); ?></span>
                 </div>
               </div>
             </a>
@@ -284,7 +285,7 @@ require '../functions.php'
             <div class="card-header bg-transparent">
               <div class="row align-items-center">
                 <div class="col">
-                  <h1 class="text-gradient-default mb-0 text-center">Selamat Datang, <?php echo  $_SESSION["username"]; ?></h1>
+                  <h1 class="text-gradient-default mb-0 text-center">Selamat Datang, <?php echo e($_SESSION["username"]); ?></h1>
                   <h4 class="text-gradient-default mb-0 text-center">Selamat datang di dasbor admin Creativo Advertising</h4>
                 </div>
               </div>

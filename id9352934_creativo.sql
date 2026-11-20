@@ -201,13 +201,15 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
+-- DATA CONTOH (sudah dianonimkan): nama, email, dan telepon fiktif; password di-hash dari nilai acak yang
+-- dibuang, jadi akun-akun ini TIDAK bisa dipakai login. Buat akun lewat halaman daftar atau docker/seed-demo.sql.
 INSERT INTO `users` (`id_user`, `username`, `email`, `password`, `jenisKelamin`, `noTelp`, `usertype`) VALUES
-(9, 'admin', 'admin@mail.com', '$2y$10$ywy88SBZs2dLrPn5tb35WOwaaERW133d0HirsqJ6fOUUgcpiqf/aW', 1, '32323232323', 1),
-(10, 'hendrik', 'hendrik@mail.com', '$2y$10$qAh6qJfxJvObOa8WIits4uYeeXDvgxHQ.JxDmv4.3IjLSE3NWtdrS', 1, '081230814747', 2),
-(13, 'rizky123', 'rizky11@gmail.com', '$2y$10$bMygF.7UT25Irj4NK8UiUuxG1mECW4DCScZonXzej01bcimY5BbTu', 1, '089765776513', 2),
-(14, 'rizky11', 'rizk@gmail.com', '$2y$10$itzEQqpjMr76cy5gLaHAA.wm6X5DHFfEVnsicAJDxvrzHQQBEj9t6', 1, '088888654413', 2),
-(15, 'zahraelys08', 'zahra@gmail.com', '$2y$10$HTP31JkHdh8JAalu3RTepeX0xbQ063kFCuaIFJ3BFBR7F0sVaH3Em', 2, '085648363948', 2),
-(16, 'zahraelys', 'elys@gmail.com', '$2y$10$UF1q41HEqCrPE8G6xZptae.A5vSnAGpdkF3szELyZzGtXdwzNL4ue', 2, '08512312433', 2);
+(9, 'admin', 'admin@example.com', '$2y$12$qV1fCfg8IEesfacgLmaYL.O20qT1erJ/MA0yuoAcSfwYPHyj2N/hG', 1, '081200000000', 1),
+(10, 'pelanggan1', 'cust1@example.com', '$2y$12$txTOIAW2nakXOkuIIiS3IumUsdTWp.yhhaRLQP1Q6QkvI/eZSMLYC', 1, '081200000001', 2),
+(13, 'pelanggan2', 'cust2@example.com', '$2y$12$Rjr5BqVk9ekGaNGbrzsiX.Iqja55cs//WBIg5zhZzjhLOLrd3Brv6', 1, '081200000002', 2),
+(14, 'pelanggan3', 'cust3@example.com', '$2y$12$Ry3blyQ52BdEiuPoSNRwV.Jg6idkzMNhPRAYz7NhdI7zyVIumQDey', 1, '081200000003', 2),
+(15, 'pelanggan4', 'cust4@example.com', '$2y$12$Uyg6V/AaPnYnWZQ.8mdXQOpbJ.tfwF9Mo1Knw4ivAo/lcoHqINOK2', 2, '081200000004', 2),
+(16, 'pelanggan5', 'cust5@example.com', '$2y$12$9x1PcMSUVQm4jJ1qtZEZU.WSZ6zgR4OYjmBWUer3Xq8ipKF8lVt1q', 2, '081200000005', 2);
 
 -- --------------------------------------------------------
 

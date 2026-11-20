@@ -7,6 +7,7 @@ if( !isset($_SESSION["login"]) ) {
 }
 
 require '../functions.php';
+require __DIR__ . '/auth.php';
 $result = mysqli_query($conn, "SELECT jasa.id_jasa, kj.ket_katJasa, jasa.namaJasa, jasa.keterangan, jasa.harga
                                 FROM jasa, kategoriJasa as kj
                                 WHERE jasa.kategori_Jasa = kj.id_katJasa");
@@ -157,7 +158,7 @@ $result = mysqli_query($conn, "SELECT jasa.id_jasa, kj.ket_katJasa, jasa.namaJas
                   <img alt="Image placeholder" src="assets/img/theme/user.png">
                 </span>
                 <div class="media-body ml-2 d-none d-lg-block">
-                  <span class="mb-0 text-sm  font-weight-bold"><?php echo  $_SESSION["username"]; ?></span>
+                  <span class="mb-0 text-sm  font-weight-bold"><?php echo e($_SESSION["username"]); ?></span>
                 </div>
               </div>
             </a>
@@ -313,25 +314,27 @@ $result = mysqli_query($conn, "SELECT jasa.id_jasa, kj.ket_katJasa, jasa.namaJas
                   <?php $i = 1; ?>
                   <?php while( $row = mysqli_fetch_assoc($result)) : ?> 
                   <tr>
-                    <th scope="row"> <?= $i; ?></th>
+                    <th scope="row"> <?= e($i) ?></th>
                     <th scope="row"> 
                       <div class="media align-items-center">
                         <div class="media-body">
-                          <span class="mb-0 text-sm"><?= $row["namaJasa"]; ?></span>
+                          <span class="mb-0 text-sm"><?= e($row["namaJasa"]) ?></span>
                         </div>
                       </div>
                     </th>
-                    <td><?= $row["ket_katJasa"]; ?></td>
-                    <td><?= $row["keterangan"]; ?></td>
-                    <td>Rp.<?= $row["harga"]; ?></td></td>
+                    <td><?= e($row["ket_katJasa"]) ?></td>
+                    <td><?= e($row["keterangan"]) ?></td>
+                    <td>Rp.<?= e($row["harga"]) ?></td></td>
                     <td>
                       <div class="dropdown">
-                        <a class="btn btn-sm" href="ubahjasa.php?id=<?= $row["id_jasa"]; ?>">
+                        <a class="btn btn-sm" href="ubahjasa.php?id=<?= e($row["id_jasa"]) ?>">
                           Edit
                         </a>
-                        <a class="btn btn-sm" href="hapusjasa.php?id=<?= $row["id_jasa"]; ?>" onclick="return confirm('Yakin mau menghapus jasa ?')">
-                          Hapus
-                        </a>
+                        <form method="post" action="hapusjasa.php" style="display:inline" onsubmit="return confirm('Yakin mau menghapus jasa ?')">
+<?= csrf_field() ?>
+                          <input type="hidden" name="id" value="<?= e($row["id_jasa"]) ?>">
+                          <button type="submit" class="btn btn-sm">Hapus</button>
+                        </form>
                       </div>
                     </td>
                   </tr>

@@ -5,7 +5,7 @@ require 'functions.php';
 
 if( isset($_SESSION["login"]) ) {
     $session = $_SESSION["username"];
-    $iduser = mysqli_query($conn, "SELECT * FROM users WHERE username = '$session'");
+    $iduser = dbq("SELECT * FROM users WHERE username = ?", "s", [$session]);
     $baris = mysqli_fetch_assoc($iduser);
     if ( $baris["usertype"] != 1 ) {
         echo "<script>location.href='customer/index.php';</script>";
@@ -22,20 +22,21 @@ if( isset($_POST["login"]) ) {
     $username = $_POST["username"];
     $password = $_POST["password"];
 
-    $result = mysqli_query($conn, "SELECT * FROM users WHERE username = '$username'");
+    $result = dbq("SELECT * FROM users WHERE username = ?", "s", [$username]);
 
     //cek user
-    if( mysqli_num_rows($result) === 1 ) {
+    if( $result instanceof mysqli_result && mysqli_num_rows($result) === 1 ) {
 
         //cek password
         $row = mysqli_fetch_assoc($result);
         if( password_verify($password, $row["password"]) ) {
-            //set session
+            //set session (ID session diganti untuk mencegah session fixation)
+            session_regenerate_id(true);
             $_SESSION["login"] = true;
-            $_SESSION["username"] = $username;
+            // pakai username persis seperti di database, bukan input mentah
+            $_SESSION["username"] = $row["username"];
 
-            $iduser = mysqli_query($conn, "SELECT * FROM users WHERE username = '$username'");
-            $baris = mysqli_fetch_assoc($iduser);
+            $baris = $row;
             if ( $baris["usertype"] != 1 ) {
                 echo "<script>location.href='customer/index.php';</script>";
                 exit;
@@ -98,6 +99,7 @@ if( isset($_POST["login"]) ) {
     </div>
     <div class="login-clean">
         <form method="post">
+<?= csrf_field() ?>
             <h2 class="sr-only">Login Form</h2>
             <?php if( isset($error) ) : ?>
                 <p style="color: red; font-style: italic;"> username / password salah</p>

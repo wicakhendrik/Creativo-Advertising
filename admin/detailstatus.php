@@ -7,9 +7,10 @@ if( !isset($_SESSION["login"]) ) {
 }
 
 require '../functions.php';
+require __DIR__ . '/auth.php';
 
 $id = $_GET["id"];
-$result = mysqli_query($conn, "SELECT * FROM detil_pemesanan, jasa WHERE id_pemesanan = $id and detil_pemesanan.jasa = jasa.id_jasa");
+$result = dbq("SELECT * FROM detil_pemesanan, jasa WHERE id_pemesanan = ? and detil_pemesanan.jasa = jasa.id_jasa", "i", [(int)$id]);
 $session = $_SESSION["username"];
 ?>
 <!DOCTYPE html>
@@ -157,7 +158,7 @@ $session = $_SESSION["username"];
                   <img alt="Image placeholder" src="assets/img/theme/user.png">
                 </span>
                 <div class="media-body ml-2 d-none d-lg-block">
-                  <span class="mb-0 text-sm  font-weight-bold"><?php echo  $_SESSION["username"]; ?></span>
+                  <span class="mb-0 text-sm  font-weight-bold"><?php echo e($_SESSION["username"]); ?></span>
                 </div>
               </div>
             </a>
@@ -308,10 +309,10 @@ $session = $_SESSION["username"];
                 <?php $i = 1; ?>
                     <?php while( $detil = mysqli_fetch_assoc($result)) : ?> 
                         <tr>
-                            <th scope="row"> <?= $i; ?></th>
-                            <td><?= $detil["namaJasa"]; ?>
-                            <td><?= $detil["jml_pesan"]; ?></td>
-                            <td><?= $detil["total_harga"]; ?></td>
+                            <th scope="row"> <?= e($i) ?></th>
+                            <td><?= e($detil["namaJasa"]) ?>
+                            <td><?= e($detil["jml_pesan"]) ?></td>
+                            <td><?= e($detil["total_harga"]) ?></td>
                         </tr>
                     <?php $i++; ?>
                     <?php endwhile; ?>

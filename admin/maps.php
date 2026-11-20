@@ -6,6 +6,7 @@ if( !isset($_SESSION["login"]) ) {
   exit;
 }
 require '../functions.php';
+require __DIR__ . '/auth.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -161,7 +162,7 @@ require '../functions.php';
                   <img alt="Image placeholder" src="assets/img/theme/user.png">
                 </span>
                 <div class="media-body ml-2 d-none d-lg-block">
-                  <span class="mb-0 text-sm  font-weight-bold"><?php echo  $_SESSION["username"]; ?></span>
+                  <span class="mb-0 text-sm  font-weight-bold"><?php echo e($_SESSION["username"]); ?></span>
                 </div>
               </div>
             </a>
@@ -292,11 +293,9 @@ require '../functions.php';
         <div id="mapid"></div>
         <script>
             var map = L.map('mapid').setView([-7.135112,112.7134657], 50);
-            L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
-                attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
-                maxZoom: 18,
-                id: 'mapbox.streets',
-                accessToken: 'pk.eyJ1Ijoid2ljYWtoZW5kcmlrIiwiYSI6ImNqejB1aXQ1ejAwdWwzYm8xY3Iwd2Vncm8ifQ.hqMfI1Y0XrRp0-YndIVISA'
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+                maxZoom: 19
             }).addTo(map);
         </script>
         </div>

@@ -1,0 +1,12 @@
+# Jangan masukkan ke image web: semua yang ada di image bisa diakses lewat URL.
+# Dump DB (berisi hash user), seed, dan konfigurasi TIDAK boleh ada di web root.
+.git
+.env
+.env.*
+*.sql
+docker
+screenshots
+Dockerfile
+docker-compose.yml
+**/*.md
+**/node_modules
