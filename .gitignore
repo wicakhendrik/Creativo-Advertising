@@ -1,0 +1,14 @@
+# Rahasia & konfigurasi lokal (JANGAN di-commit). Template-nya ada di .env.example
+.env
+.env.*
+!.env.example
+
+# Backup database & log hasil operasi di VPS
+backups/
+*.log
+
+# File OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

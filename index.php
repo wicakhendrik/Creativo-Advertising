@@ -165,11 +165,9 @@
     <div id="mapid"></div>
     <script>
         var map = L.map('mapid').setView([-7.135112,112.7134657], 50);
-        L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
-            attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
-            maxZoom: 18,
-            id: 'mapbox.streets',
-            accessToken: 'pk.eyJ1Ijoid2ljYWtoZW5kcmlrIiwiYSI6ImNqejB1aXQ1ejAwdWwzYm8xY3Iwd2Vncm8ifQ.hqMfI1Y0XrRp0-YndIVISA'
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+            maxZoom: 19
         }).addTo(map);
     </script>
     <footer class="page-footer dark">

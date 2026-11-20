@@ -7,9 +7,10 @@ if( !isset($_SESSION["login"]) ) {
 }
 
 require '../functions.php';
+require __DIR__ . '/auth.php';
 
 $id = $_GET["id"];
-$jasa = query("SELECT * FROM jasa WHERE id_jasa = $id")[0];
+$jasa = query("SELECT * FROM jasa WHERE id_jasa = ?", "i", [(int)$id])[0];
 
 if( isset($_POST["ubah"]) ) {
 
@@ -177,7 +178,7 @@ if( isset($_POST["ubah"]) ) {
                   <img alt="Image placeholder" src="assets/img/theme/user.png">
                 </span>
                 <div class="media-body ml-2 d-none d-lg-block">
-                  <span class="mb-0 text-sm  font-weight-bold"><?php echo  $_SESSION["username"]; ?></span>
+                  <span class="mb-0 text-sm  font-weight-bold"><?php echo e($_SESSION["username"]); ?></span>
                 </div>
               </div>
             </a>
@@ -316,13 +317,14 @@ if( isset($_POST["ubah"]) ) {
             </div>
             <div class="card-body">
               <form method="post">
-                <input type="hidden" name="id" value="<?= $jasa["id_jasa"]; ?>">
+<?= csrf_field() ?>
+                <input type="hidden" name="id" value="<?= e($jasa["id_jasa"]) ?>">
                 <div class="pl-lg-4">
                   <div class="row">
                     <div class="col-lg-12">
                       <div class="form-group">
                         <label class="form-control-label" for="namajasa" name="namajasa">Nama Jasa</label>
-                        <input type="text" id="namajasa" class="form-control form-control-alternative" name="namajasa" placeholder="Nama Jasa" required value="<?= $jasa["namaJasa"]; ?>">
+                        <input type="text" id="namajasa" class="form-control form-control-alternative" name="namajasa" placeholder="Nama Jasa" required value="<?= e($jasa["namaJasa"]) ?>">
                       </div>
                     </div>
                     <div class="col-lg-12">
@@ -334,9 +336,9 @@ if( isset($_POST["ubah"]) ) {
                           <?php if(mysqli_num_rows($sql) != 0) : ?>
                             <?php while($row = mysqli_fetch_assoc($sql)) : ?>
                                 <?php if($row["id_katJasa"] == $jasa["kategori_Jasa"]) : ?>
-                                    <option value="<?= $row["id_katJasa"]; ?>" selected><?= $row["id_katJasa"]; ?>. <?= $row["ket_katJasa"]; ?></option>
+                                    <option value="<?= e($row["id_katJasa"]) ?>" selected><?= e($row["id_katJasa"]) ?>. <?= e($row["ket_katJasa"]) ?></option>
                                   <?php else : ?>
-                                    <option value="<?= $row["id_katJasa"]; ?>"><?= $row["id_katJasa"]; ?>. <?= $row["ket_katJasa"]; ?></option>
+                                    <option value="<?= e($row["id_katJasa"]) ?>"><?= e($row["id_katJasa"]) ?>. <?= e($row["ket_katJasa"]) ?></option>
                                 <?php endif; ?>
                             <?php endwhile; ?>
                           <?php endif; ?>
@@ -348,13 +350,13 @@ if( isset($_POST["ubah"]) ) {
                     <div class="col-lg-12">
                       <div class="form-group">
                         <label class="form-control-label" for="keterangan" name="keterangan">Keterangan</label>
-                        <input type="text" id="keterangan" class="form-control form-control-alternative" name="keterangan" placeholder="Keterangan" required value="<?= $jasa["keterangan"]; ?>">
+                        <input type="text" id="keterangan" class="form-control form-control-alternative" name="keterangan" placeholder="Keterangan" required value="<?= e($jasa["keterangan"]) ?>">
                       </div>
                     </div>
                     <div class="col-lg-12">
                       <div class="form-group">
                         <label class="form-control-label" for="harga" name="harga">Harga</label>
-                        <input type="text" id="harga" class="form-control form-control-alternative" name="harga" placeholder="500000" required value="<?= $jasa["harga"]; ?>">
+                        <input type="text" id="harga" class="form-control form-control-alternative" name="harga" placeholder="500000" required value="<?= e($jasa["harga"]) ?>">
                       </div>
                     </div>
                   </div>

@@ -14,7 +14,7 @@
                                   FROM jasa, kategoriJasa as kj
                                   WHERE jasa.kategori_Jasa = kj.id_katJasa");
   $session = $_SESSION["username"];
-  $iduser = mysqli_query($conn, "SELECT * FROM users WHERE username = '$session'");
+  $iduser = dbq("SELECT * FROM users WHERE username = ?", "s", [$session]);
 
   if( isset($_POST["confirm"]) ) {
 
@@ -60,11 +60,11 @@
 
       <?php $i = 1; ?>
       <?php while( $row = mysqli_fetch_assoc($hasil)) : ?> 
-      var total<?= $i; ?>;
-      var jumlah<?= $i; ?> = parseInt(myForm.jumlah<?= $i; ?>.value);
-      if(myForm.jumlah<?= $i; ?>.value == "") jumlah<?= $i; ?>=0;
-      total<?= $i; ?> = parseInt(myForm.harga<?= $i; ?>.value)*jumlah<?= $i; ?>;
-      total += total<?= $i; ?>;
+      var total<?= e($i) ?>;
+      var jumlah<?= e($i) ?> = parseInt(myForm.jumlah<?= e($i) ?>.value);
+      if(myForm.jumlah<?= e($i) ?>.value == "") jumlah<?= e($i) ?>=0;
+      total<?= e($i) ?> = parseInt(myForm.harga<?= e($i) ?>.value)*jumlah<?= e($i) ?>;
+      total += total<?= e($i) ?>;
       <?php $i++; ?>
       <?php endwhile; ?>
 
@@ -87,7 +87,7 @@
 
       <?php $j = 1; ?>
       <?php while( $angka = mysqli_fetch_assoc($hasil)) : ?> 
-      element.jumlah<?= $i ?>.value = "";
+      element.jumlah<?= e($i) ?>.value = "";
       <?php $j++; ?>
       <?php endwhile; ?>
       element.total.value = "";
@@ -232,7 +232,7 @@
                   <img alt="Image placeholder" src="assets/img/theme/user.png">
                 </span>
                 <div class="media-body ml-2 d-none d-lg-block">
-                  <span class="mb-0 text-sm  font-weight-bold"><?php echo  $_SESSION["username"]; ?></span>
+                  <span class="mb-0 text-sm  font-weight-bold"><?php echo e($_SESSION["username"]); ?></span>
                 </div>
               </div>
             </a>
@@ -269,7 +269,7 @@
                       <h5 class="card-title text-uppercase text-muted mb-0">Saldo yang pernah dipakai</h5>
                       <span class="h2 font-weight-bold mb-0">
                         <?php
-                            $total = mysqli_query($conn, "SELECT SUM(total_harga) as total FROM pemesanan, users WHERE users.username = '$session' and pemesanan.customer = users.id_user");
+                            $total = dbq("SELECT SUM(total_harga) as total FROM pemesanan, users WHERE users.username = ? and pemesanan.customer = users.id_user", "s", [$session]);
                             while( $row = mysqli_fetch_assoc($total)) {
                               echo $row["total"];
                             }
@@ -293,7 +293,7 @@
                       <h5 class="card-title text-uppercase text-muted mb-0">Pesanan Belum Diproses</h5>
                       <span class="h2 font-weight-bold mb-0">
                       <?php
-                            $pending = mysqli_query($conn, "SELECT * FROM pemesanan, users WHERE users.username = '$session' and pemesanan.customer = users.id_user and id_status = 1");
+                            $pending = dbq("SELECT * FROM pemesanan, users WHERE users.username = ? and pemesanan.customer = users.id_user and id_status = 1", "s", [$session]);
                             $count = mysqli_num_rows($pending);
                             echo $count;
                         ?>
@@ -316,7 +316,7 @@
                       <h5 class="card-title text-uppercase text-muted mb-0">Pesanan Sedang Diproses</h5>
                       <span class="h2 font-weight-bold mb-0">
                       <?php
-                            $proses = mysqli_query($conn, "SELECT * FROM pemesanan, users WHERE users.username = '$session' and pemesanan.customer = users.id_user and id_status = 2");
+                            $proses = dbq("SELECT * FROM pemesanan, users WHERE users.username = ? and pemesanan.customer = users.id_user and id_status = 2", "s", [$session]);
                             $count = mysqli_num_rows($proses);
                             echo $count;
                         ?>
@@ -339,7 +339,7 @@
                       <h5 class="card-title text-uppercase text-muted mb-0">Pesanan Selesai Diproses</h5>
                       <span class="h2 font-weight-bold mb-0">
                       <?php
-                            $selesai = mysqli_query($conn, "SELECT * FROM pemesanan, users WHERE users.username = '$session' and pemesanan.customer = users.id_user and id_status = 3");
+                            $selesai = dbq("SELECT * FROM pemesanan, users WHERE users.username = ? and pemesanan.customer = users.id_user and id_status = 3", "s", [$session]);
                             $count = mysqli_num_rows($selesai);
                             echo $count;
                         ?>
@@ -372,6 +372,7 @@
             </div>
             <div class="table-responsive">
             <form name="pemesanan" action="#" method="post">
+<?= csrf_field() ?>
               <table class="table align-items-center table-flush">
                 <thead class="thead-light">
                   <tr>
@@ -385,25 +386,25 @@
                 </thead>
                 <tbody>
                   <?php while( $baris = mysqli_fetch_assoc($iduser)) : ?> 
-                    <input type="hidden" name="user" value="<?php echo  $baris["id_user"]; ?>">
+                    <input type="hidden" name="user" value="<?php echo e($baris["id_user"]); ?>">
                   <?php endwhile; ?>
                   <?php $i = 1; ?>
                   <?php while( $row = mysqli_fetch_assoc($result)) : ?> 
-                  <input type="hidden" name="harga<?= $i; ?>" value="<?= $row["harga"]; ?>">
-                  <input type="hidden" name="jasa<?= $i; ?>" value="<?= $row["id_jasa"]; ?>">
+                  <input type="hidden" name="harga<?= e($i) ?>" value="<?= e($row["harga"]) ?>">
+                  <input type="hidden" name="jasa<?= e($i) ?>" value="<?= e($row["id_jasa"]) ?>">
                   <tr>
-                    <th scope="row"> <?= $i; ?></th>
+                    <th scope="row"> <?= e($i) ?></th>
                     <th scope="row"> 
                       <div class="media align-items-center">
                         <div class="media-body">
-                          <span class="mb-0 text-sm"><?= $row["namaJasa"]; ?></span>
+                          <span class="mb-0 text-sm"><?= e($row["namaJasa"]) ?></span>
                         </div>
                       </div>
                     </th>
-                    <td><?= $row["ket_katJasa"]; ?></td>
-                    <td><?= $row["keterangan"]; ?></td>
-                    <td>Rp.<?= $row["harga"]; ?></td>
-                    <td><input type="number" min="0" class="form-control form-control-alternative" name="jumlah<?= $i; ?>" onchange="proses()" required></td>
+                    <td><?= e($row["ket_katJasa"]) ?></td>
+                    <td><?= e($row["keterangan"]) ?></td>
+                    <td>Rp.<?= e($row["harga"]) ?></td>
+                    <td><input type="number" min="0" class="form-control form-control-alternative" name="jumlah<?= e($i) ?>" onchange="proses()" required></td>
                   </tr>
                   <?php $i++; ?>
                   <?php endwhile; ?>

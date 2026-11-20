@@ -7,6 +7,7 @@ if( !isset($_SESSION["login"]) ) {
 }
 
 require '../functions.php';
+require __DIR__ . '/auth.php';
 $session = $_SESSION["username"];
 $result = mysqli_query($conn, "SELECT * FROM pemesanan, users, statuspemesanan
 WHERE pemesanan.customer = users.id_user and statuspemesanan.id_status = pemesanan.id_status");
@@ -175,7 +176,7 @@ if( isset($_POST["tambahkan"]) ) {
                   <img alt="Image placeholder" src="assets/img/theme/user.png">
                 </span>
                 <div class="media-body ml-2 d-none d-lg-block">
-                  <span class="mb-0 text-sm  font-weight-bold"><?php echo  $_SESSION["username"]; ?></span>
+                  <span class="mb-0 text-sm  font-weight-bold"><?php echo e($_SESSION["username"]); ?></span>
                 </div>
               </div>
             </a>
@@ -330,21 +331,25 @@ if( isset($_POST["tambahkan"]) ) {
                   <?php $i = 1; ?>
                   <?php while( $row = mysqli_fetch_assoc($result)) : ?> 
                   <tr>
-                    <th scope="row"> <?= $i; ?></th>
-                    <td><?= $row["id_pemesanan"]; ?>
-                    <td><?= $row["tgl_pemesanan"]; ?>
-                    <td><?= $row["username"]; ?>
-                    <td><?= $row["total_harga"]; ?></td>
-                    <td><?= $row["ket_status"]; ?></td>
-                    <td><a class="btn btn-sm" href="detailstatus.php?id=<?= $row["id_pemesanan"]; ?>">Detil Pemesanan</a></td>
+                    <th scope="row"> <?= e($i) ?></th>
+                    <td><?= e($row["id_pemesanan"]) ?>
+                    <td><?= e($row["tgl_pemesanan"]) ?>
+                    <td><?= e($row["username"]) ?>
+                    <td><?= e($row["total_harga"]) ?></td>
+                    <td><?= e($row["ket_status"]) ?></td>
+                    <td><a class="btn btn-sm" href="detailstatus.php?id=<?= e($row["id_pemesanan"]) ?>">Detil Pemesanan</a></td>
                     <td>
-                    <div>
-                        <a class="btn btn-sm" href="pesananditerima.php?id=<?= $row["id_pemesanan"]; ?>">
-                          Pesanan Diterima
-                        </a>
-                        <a class="btn btn-sm" href="pesananselesai.php?id=<?= $row["id_pemesanan"]; ?>">
-                          Pesanan Selesai
-                        </a>
+                    <div style="display:flex;flex-direction:column;align-items:flex-start;gap:4px">
+                        <form method="post" action="pesananditerima.php" style="display:inline">
+<?= csrf_field() ?>
+                          <input type="hidden" name="id" value="<?= e($row["id_pemesanan"]) ?>">
+                          <button type="submit" class="btn btn-sm">Pesanan Diterima</button>
+                        </form>
+                        <form method="post" action="pesananselesai.php" style="display:inline">
+<?= csrf_field() ?>
+                          <input type="hidden" name="id" value="<?= e($row["id_pemesanan"]) ?>">
+                          <button type="submit" class="btn btn-sm">Pesanan Selesai</button>
+                        </form>
                       </div>
                     </td>
                   </tr>

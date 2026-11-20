@@ -1,4 +1,5 @@
 <?php
+session_start();
 
 require 'functions.php';
 
@@ -9,7 +10,7 @@ if( isset($_POST["register"]) ) {
                 alert('user baru berhasil ditambahkan!');
             </script>";
     } else {
-        echo mysqli_error($conn);
+        echo htmlspecialchars((string) $db_error);
     }
 }
 ?>
@@ -64,6 +65,7 @@ if( isset($_POST["register"]) ) {
         <div class="form-container">
             <div class="image-holder"></div>
             <form method="post">
+<?= csrf_field() ?>
                 <h2 class="text-center"><strong>Create</strong> an account.</h2>
                 <div class="form-group"><input class="form-control" type="text" name="username" placeholder="Username" required></div>
                 <div class="form-group"><input class="form-control" type="email" name="email" placeholder="Email" required></div>
@@ -73,7 +75,7 @@ if( isset($_POST["register"]) ) {
                         <?php $sql = mysqli_query($conn, "SELECT * FROM jeniskelamin ORDER BY id_jk ASC"); ?>
                         <?php if(mysqli_num_rows($sql) != 0) : ?>
                         <?php while($row = mysqli_fetch_assoc($sql)) : ?>
-                            <option value="<?= $row["id_jk"]; ?>"><?= $row["id_jk"]; ?>. <?= $row["ket_jk"]; ?></option>
+                            <option value="<?= e($row["id_jk"]) ?>"><?= e($row["id_jk"]) ?>. <?= e($row["ket_jk"]) ?></option>
                         <?php endwhile; ?>
                         <?php endif; ?>
                     </select>

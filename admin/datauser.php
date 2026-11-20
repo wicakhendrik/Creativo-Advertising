@@ -7,6 +7,7 @@ if( !isset($_SESSION["login"]) ) {
 }
 
 require '../functions.php';
+require __DIR__ . '/auth.php';
 $result = mysqli_query($conn, "SELECT users.id_user, users.username, users.email, jk.ket_jk, users.noTelp, usertype.ket_usertype
                                 FROM users, jeniskelamin as jk, usertype
                                 WHERE users.jenisKelamin = jk.id_jk and users.usertype = usertype.id_usertype");
@@ -158,7 +159,7 @@ $result = mysqli_query($conn, "SELECT users.id_user, users.username, users.email
                   <img alt="Image placeholder" src="assets/img/theme/user.png">
                 </span>
                 <div class="media-body ml-2 d-none d-lg-block">
-                  <span class="mb-0 text-sm  font-weight-bold"><?php echo  $_SESSION["username"]; ?></span>
+                  <span class="mb-0 text-sm  font-weight-bold"><?php echo e($_SESSION["username"]); ?></span>
                 </div>
               </div>
             </a>
@@ -312,26 +313,28 @@ $result = mysqli_query($conn, "SELECT users.id_user, users.username, users.email
                   <?php $i = 1; ?>  
                   <?php while( $row = mysqli_fetch_assoc($result)) : ?> 
                   <tr>
-                    <th scope="row"> <?= $i; ?></th>  
+                    <th scope="row"> <?= e($i) ?></th>  
                     <th scope="row">
                       <div class="media align-items-center">
                         <div class="media-body">
-                          <span class="mb-0 text-sm"><?= $row["username"]; ?></span>
+                          <span class="mb-0 text-sm"><?= e($row["username"]) ?></span>
                         </div>
                       </div>
                     </th>
-                    <td><?= $row["email"]; ?></td>
-                    <td><?= $row["ket_jk"]; ?></td>
-                    <td><?= $row["noTelp"]; ?></td>
-                    <td><?= $row["ket_usertype"]; ?></td>
+                    <td><?= e($row["email"]) ?></td>
+                    <td><?= e($row["ket_jk"]) ?></td>
+                    <td><?= e($row["noTelp"]) ?></td>
+                    <td><?= e($row["ket_usertype"]) ?></td>
                     <td>
                       <div>
-                        <a class="btn btn-sm" href="ubahuser.php?id=<?= $row["id_user"]; ?>">
+                        <a class="btn btn-sm" href="ubahuser.php?id=<?= e($row["id_user"]) ?>">
                           Edit
                         </a>
-                        <a class="btn btn-sm" href="hapususer.php?id=<?= $row["id_user"]; ?>" onclick="return confirm('Yakin mau menghapus user ?')">
-                          Hapus
-                        </a>
+                        <form method="post" action="hapususer.php" style="display:inline" onsubmit="return confirm('Yakin mau menghapus user ?')">
+<?= csrf_field() ?>
+                          <input type="hidden" name="id" value="<?= e($row["id_user"]) ?>">
+                          <button type="submit" class="btn btn-sm">Hapus</button>
+                        </form>
                       </div>
                     </td>
                   </tr>
